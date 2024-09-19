@@ -2,6 +2,7 @@ import org from "@/views/system/org/Index.vue";
 import module from "@/views/system/module/Index.vue";
 import role from "@/views/system/role/Index.vue";
 import config from "@/views/system/config/Index.vue";
+import chat from "@/views/ai/Index.vue";
 
 /**
  * @author shenjian
@@ -31,6 +32,12 @@ const systemRouter = [
         meta: { title: '配置列表' },
         name: 'config',
         component: config,
+    },
+    {
+        path: '/chat',
+        meta: { title: ' ai聊天室' },
+        name: 'chat',
+        component: chat,
     },
 ]
 export default systemRouter

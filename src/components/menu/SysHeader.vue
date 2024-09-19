@@ -18,10 +18,12 @@
       >
         <el-menu-item v-if="permissions.indexOf('org') > -1" index="org">机构管理</el-menu-item>
         <el-menu-item v-if="permissions.indexOf('user') > -1" index="user">用户管理</el-menu-item>
+        <el-menu-item v-if="permissions.indexOf('config') > -1" index="config">用户管理</el-menu-item>
         <el-sub-menu v-if="permissions.indexOf('module') > -1 || permissions.indexOf('role') > -1" index="6">
           <template #title>系统管理</template>
           <el-menu-item v-if="permissions.indexOf('module') > -1" index="module">菜单管理</el-menu-item>
           <el-menu-item v-if="permissions.indexOf('role') > -1" index="role">角色管理</el-menu-item>
+          <el-menu-item v-if="permissions.indexOf('config') > -1" index="config">配置管理</el-menu-item>
         </el-sub-menu>
       </el-menu>
       <div class="rg-infor">
