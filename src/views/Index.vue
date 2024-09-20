@@ -12,6 +12,7 @@
       <org v-else-if="current === 'org'"></org>
       <module v-else-if="current === 'module'"></module>
       <config v-else-if="current === 'config'"></config>
+      <ai v-else-if="current === 'ai'"></ai>
     </el-main>
     <sys-footer :current="current" @updateRouter="updateRouter"></sys-footer>
   </div>
@@ -24,10 +25,11 @@ import Org from "@/views/system/org/Index.vue";
 import Module from "@/views/system/module/Index.vue";
 import User from "@/views/system/user/Index.vue";
 import Config from "@/views/system/config/Index.vue";
+import Ai from "@/views/ai/Index.vue";
 
 export default {
   name: 'index',
-  components: {Config, User, Module, Org, Role, SysFooter, SysHeader},
+  components: {Config, User, Module, Org, Role, SysFooter, SysHeader,Ai},
   data() {
     return {
       current: 'user',
