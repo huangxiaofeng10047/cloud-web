@@ -13,4 +13,20 @@ admin 1
 
 详见 https://blog.csdn.net/SJshenjian/article/details/139395203
 
-欢迎关注公众号 算法小生
+### 4. 新增AI聊天
+
+直接输出
+
+![img.png](demo/img.png)
+
+流式输出
+
+![img.png](demo/img1.png)
+
+TODO
+1. 流式输出markdown支持
+2. 页面优化
+
+欢迎关注公众号 算法小生，欢迎提交代码~~
+
+
