@@ -9,6 +9,7 @@
 <!--              <div className="show-html" v-html=message.text></div>-->
 <!--            </div>-->
 <!--          </div>-->
+
           <div class="messages" v-for="msg in messages" :key="msg.id">
             <div :class="msg.from === 'user' ? 'user-message' : 'ai-message'">
               <div v-if="msg.type === 'code'" class="code-block">
@@ -90,9 +91,12 @@ export default {
               type: 'text',
             })
             console.log(data)
+            // alert(data)
           } else if (data === '<SSE_END>') {
             console.log(data)
+            // alert(data)
           } else {
+            // alert(data)
             const isCode = data.startsWith('```');
             console.log(data)
             const msg = {
@@ -123,9 +127,35 @@ export default {
       this.$nextTick(() => {
         this.$el.querySelectorAll('pre code').forEach((block) => {
           hljs.highlightBlock(block);
+          this.addCopyButton(block);
         });
+      
       });
     },
+    addCopyButton(block) {
+      //删除两个复制按钮
+      if (block.parentNode.querySelector('.copy-button')) {
+        return;
+      }
+      const button = document.createElement('button');
+      button.textContent = '复制';
+      button.classList.add('copy-button');
+      button.addEventListener('click', () => {
+        this.copyToClipboard(block.innerText);
+      });
+      //添加绿色背景
+      button.style.backgroundColor = '#4CAF50';
+      //给按钮添加样式
+      button.style.color = 'white';
+      button.style.border = 'none';
+      button.style.padding = '5px 10px';
+      button.style.borderRadius = '5px';
+      button.style.cursor = 'pointer';
+      //添加到pre标签的父元素
+      const pre = block.parentNode;
+      pre.appendChild(button);
+    },
+  
     // markdown
     renderMessageContent(msg) {
       if (msg === '') {
@@ -151,8 +181,8 @@ export default {
     sendMessage() {
       const self = this
       if (self.inputMessage) {
-        self.messages.push({id: self.messages.length + 1, text: self.inputMessage, isUser: true});
-        // 一次性输出
+        // self.messages.push({id: self.messages.length + 1, text: self.inputMessage, isUser: true});
+        // // 一次性输出
         // self.$http.post('/chat/chat', {'content': self.inputMessage}, 'apiUrl').then(res => {
         //   self.messages.push({id: self.messages.length + 1, text: self.renderMessageContent(res), isUser: false});
         //   self.inputMessage = '';
@@ -227,5 +257,20 @@ button {
   margin-left: 10px;
   padding: 5px 10px;
   cursor: pointer;
+}
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.code-block button:hover {
+  background-color: #45a049;
 }
 </style>
