@@ -84,6 +84,8 @@ export default {
       // add the user's handlers
       this.handlers.forEach((h) => {
         client.on(h.event, (data) => { //
+          data = data.replaceAll("&#32;", " ")
+
           if (data === '<SSE_START>') {
             self.messages.push( {
               text: '',
@@ -97,7 +99,9 @@ export default {
             // alert(data)
           } else {
             // alert(data)
+            
             const isCode = data.startsWith('```');
+            console.log(" public abc")
             console.log(data)
             const msg = {
               text: data,
@@ -127,7 +131,8 @@ export default {
       this.$nextTick(() => {
         this.$el.querySelectorAll('pre code').forEach((block) => {
           hljs.highlightBlock(block);
-          this.addCopyButton(block);
+          // alert(block)
+          // this.addCopyButton(block);
         });
       
       });
