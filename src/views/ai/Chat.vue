@@ -11,6 +11,8 @@
 <!--          </div>-->
 
           <div class="messages" v-for="msg in messages" :key="msg.id">
+            <el-avatar v-if="!msg.isUser" shape="square" size="50" :src="botAvatar"></el-avatar>
+            <el-avatar v-if="msg.isUser" shape="square" size="50" :src="userAvatar"></el-avatar>
             <div :class="msg.from === 'user' ? 'user-message' : 'ai-message'">
               <div v-if="msg.type === 'code'" class="code-block">
                 <pre>
@@ -50,6 +52,7 @@ export default {
       ],
       inputMessage: '',
       botAvatar: require('../../assets/images/robot.png'),
+      userAvatar: require('../../assets/images/user.png'),
       handlers: [
         {
           event: 'message',
@@ -88,26 +91,24 @@ export default {
 
           if (data === '<SSE_START>') {
             self.messages.push( {
-              text: '',
+              text: 'abc--hahah',
               from: 'ai',
               type: 'text',
             })
-            console.log(data)
-            // alert(data)
+            console.log('#####'+data)
           } else if (data === '<SSE_END>') {
-            console.log(data)
+            console.log('#####'+data)
             // alert(data)
           } else {
             // alert(data)
-            
             const isCode = data.startsWith('```');
-            console.log(" public abc")
             console.log(data)
-            const msg = {
-              text: data,
-              from: 'ai',
-              type: isCode ? 'code' : 'text',
-            };
+            // alert(data)
+            // const msg = {
+            //   text: data,
+            //   from: 'ai',
+            //   type: isCode ? 'code' : 'text',
+            // };
             self.messages[self.messages.length - 1].text += data;
             self.highlightCode();
           }
@@ -186,15 +187,22 @@ export default {
     sendMessage() {
       const self = this
       if (self.inputMessage) {
-        // self.messages.push({id: self.messages.length + 1, text: self.inputMessage, isUser: true});
+        let message=self.inputMessage;
+        // alert(message);
+        self.messages.push({id: self.messages.length + 1, text: self.inputMessage, isUser: true,from: 'user'});
+        self.messages.push({id: self.messages.length + 1, text: 'ai正在处理...',isUser: false,from: 'ai'});
+    
         // // 一次性输出
         // self.$http.post('/chat/chat', {'content': self.inputMessage}, 'apiUrl').then(res => {
         //   self.messages.push({id: self.messages.length + 1, text: self.renderMessageContent(res), isUser: false});
         //   self.inputMessage = '';
         // })
         // 流式输出
-        self.$http.post('/chat/sseChat', {'content': self.inputMessage}, 'apiUrl').then(res => {
-          self.inputMessage = '';
+       
+        self.inputMessage = '';
+        self.$http.post('/chat/sseChat', {'content': message}, 'apiUrl').then(res => {
+          message = '';
+          
         })
       }
     },
