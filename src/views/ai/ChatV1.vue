@@ -4,8 +4,8 @@
       <el-row>
         <div class="chat-container" style="margin-bottom: 40px">
 <!--          <div v-for="message in messages" :key="message.id" class="message">-->
-<!--            <el-avatar v-if="!message.from" shape="square" size="50" :src="botAvatar"></el-avatar>-->
-<!--            <div :class="{'user-message': message.from, 'bot-message': !message.from}">-->
+<!--            <el-avatar v-if="!message.isUser" shape="square" size="50" :src="botAvatar"></el-avatar>-->
+<!--            <div :class="{'user-message': message.isUser, 'bot-message': !message.isUser}">-->
 <!--              <div className="show-html" v-html=message.text></div>-->
 <!--            </div>-->
 <!--          </div>-->
@@ -41,11 +41,11 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
 import store from "@/store";
 export default {
-  name: "sseChatDoubao",
+  name: "sseChat",
   data () {
     return {
       messages: [
-
+        {id: 1, text: '我是您的私人智能助理，请问现在能帮您做什么？', isUser: false}
       ],
       inputMessage: '',
       botAvatar: require('../../assets/images/robot.png'),
@@ -65,8 +65,7 @@ export default {
     }
   },
   mounted() {
-    this.connect()
-    this.$http.post('/chat/sseChatDoubao', {'content': "init"}, 'apiUrl').then(res => {})
+    //this.connect()
   },
   methods: {
     copyToClipboard(text) {
@@ -83,7 +82,7 @@ export default {
       })
       // add the user's handlers
       this.handlers.forEach((h) => {
-        client.on(h.event, (data) => {
+        client.on(h.event, (data) => { //
           if (data === '<SSE_START>') {
             self.messages.push( {
               text: '',
@@ -101,12 +100,7 @@ export default {
               from: 'ai',
               type: isCode ? 'code' : 'text',
             };
-            // 解决AI USER同行问题
-            if ( self.messages[self.messages.length - 1].from === 'user') {
-              self.messages.push({id: self.messages.length + 1, text: data, from: 'ai'});
-            } else {
-              self.messages[self.messages.length - 1].text += data;
-            }
+            self.messages[self.messages.length - 1].text += data;
             self.highlightCode();
           }
         })
@@ -157,14 +151,14 @@ export default {
     sendMessage() {
       const self = this
       if (self.inputMessage) {
-        self.messages.push({id: self.messages.length + 1, text: self.inputMessage, from: 'user'});
+        self.messages.push({id: self.messages.length + 1, text: self.inputMessage, isUser: true});
         // 一次性输出
         // self.$http.post('/chat/chat', {'content': self.inputMessage}, 'apiUrl').then(res => {
         //   self.messages.push({id: self.messages.length + 1, text: self.renderMessageContent(res), isUser: false});
         //   self.inputMessage = '';
         // })
         // 流式输出
-        self.$http.post('/chat/sseChatDoubao', {'content': self.inputMessage}, 'apiUrl').then(res => {
+        self.$http.post('/chat/sseChat', {'content': self.inputMessage}, 'apiUrl').then(res => {
           self.inputMessage = '';
         })
       }
